@@ -58,9 +58,8 @@ export default function RegisterPage() {
                 <input
                   {...register("email")}
                   id="email"
-                  // type="email"
+                  type="email"
                   autoComplete="email"
-                  // required
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
                 {errors && (
@@ -82,9 +81,8 @@ export default function RegisterPage() {
                 <input
                   {...register("password")}
                   id="password"
-                  // type="password"
+                  type="password"
                   autoComplete="new-password"
-                  // required
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
                 {errors && (
@@ -128,7 +126,6 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
-      <p>{output}</p>
     </div>
   );
 }

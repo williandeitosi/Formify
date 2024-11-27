@@ -1,35 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-const registerUserFormScheme = z.object({
-  email: z
-    .string()
-    .min(1, "E-maill é obrigatório")
-    .email("Formato de E-mail invalido")
-    .toLowerCase(),
-  password: z.coerce.string().min(6, "minimo 6 caracteres"),
-});
-
-type registerUserFormData = z.infer<typeof registerUserFormScheme>;
+import { useRegisterForm } from "../../../hooks/useRegisterForm";
 
 export default function RegisterPage() {
-  const [output, setOutput] = useState("");
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<registerUserFormData>({
-    resolver: zodResolver(registerUserFormScheme),
-  });
-
-  const registerUser = async (data: registerUserFormData) => {
-    setOutput(JSON.stringify(data, null, 2));
-  };
+  const { errors, handleSubmit, register, registerUser, output } =
+    useRegisterForm();
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 text-black">
@@ -126,6 +102,7 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
+      <p>{output}</p>
     </div>
   );
 }

@@ -1,35 +1,10 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useLoginForm } from "@/hooks/useLoginForm";
 import Link from "next/link";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-const loginUserFormScheme = z.object({
-  email: z
-    .string()
-    .min(1, "E-maill é obrigatório")
-    .email("Formato de E-mail invalido")
-    .toLowerCase(),
-  password: z.string().min(6, "minimo 6 caracteres"),
-});
-
-type loginUserFormData = z.infer<typeof loginUserFormScheme>;
 
 export default function LoginPage() {
-  const [output, setOutput] = useState("");
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<loginUserFormData>({
-    resolver: zodResolver(loginUserFormScheme),
-  });
-
-  const loginUser = (data: loginUserFormData) => {
-    setOutput(JSON.stringify(data, null, 2));
-  };
+  const { errors, handleSubmit, loginUser, output, register } = useLoginForm();
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 text-black">

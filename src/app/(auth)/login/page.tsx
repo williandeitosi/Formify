@@ -2,7 +2,7 @@
 
 import { useLoginForm } from "@/hooks/useLoginForm";
 import Link from "next/link";
-
+// TODO: criar o back-end do login para validar email e senha e gerar um token jwt
 export default function LoginPage() {
   const { errors, handleSubmit, loginUser, output, register } = useLoginForm();
 

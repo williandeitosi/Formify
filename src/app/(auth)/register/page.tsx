@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRegisterForm } from "../../../hooks/useRegisterForm";
-
+// TODO: criar o back-end do register para validar email e senha e gerar um token jwt
 export default function RegisterPage() {
   const { errors, handleSubmit, register, registerUser, output } =
     useRegisterForm();

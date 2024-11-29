@@ -1,44 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useHomePageForm } from "@/hooks/useHomePageForm";
 import Image from "next/image";
-
-interface Person {
-  id: number;
-  name: string;
-  cpf: string;
-  country: string;
-  avatar: string;
-}
-
-interface Item {
-  id: number;
-  name: string;
-  price: number;
-}
-
+// TODO: fazer o back-end para pegar a imgaem e transfromar em base64 para salvar no banco de dados
+// depois fazer o GET para lista todas as pessoas
+// mudar o componente para criar uma pessoa e itens dentro dela , nao uma lista de itens na Home Page
+// quando clicar na pessoa vai abrir um modal onde vai fazer um GET para listar todos os itens que a pessoa tem
 export default function HomePage() {
-  const [people, setPeople] = useState<Person[]>([]);
-  const [items] = useState<Item[]>([
-    { id: 1, name: "Produto 1", price: 10.99 },
-    { id: 2, name: "Produto 2", price: 20.99 },
-    { id: 3, name: "Produto 3", price: 30.99 },
-  ]);
-  const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const newPerson: Person = {
-      id: people.length + 1,
-      name: formData.get("name") as string,
-      cpf: formData.get("cpf") as string,
-      country: formData.get("country") as string,
-      avatar: URL.createObjectURL(formData.get("avatar") as File),
-    };
-    setPeople([...people, newPerson]);
-    e.currentTarget.reset();
-  };
+  const {
+    onSubmit,
+    items,
+    people,
+    selectedPerson,
+    setSelectedPerson,
+    register,
+    handleSubmit,
+    errors,
+    output,
+  } = useHomePageForm();
 
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
@@ -47,7 +26,7 @@ export default function HomePage() {
         <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
           <div className="max-w-md mx-auto">
             <h1 className="text-2xl font-semibold mb-6">Perfil do Usuário</h1>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
                 <label
                   htmlFor="name"
@@ -58,10 +37,14 @@ export default function HomePage() {
                 <input
                   type="text"
                   id="name"
-                  name="name"
-                  required
+                  {...register("name")}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
+                {errors.name && (
+                  <span className="text-xs text-red-800">
+                    {errors.name?.message}
+                  </span>
+                )}
               </div>
               <div>
                 <label
@@ -73,10 +56,14 @@ export default function HomePage() {
                 <input
                   type="text"
                   id="cpf"
-                  name="cpf"
-                  required
+                  {...register("cpf")}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
+                {errors.cpf && (
+                  <span className="text-xs text-red-800">
+                    {errors.cpf?.message}
+                  </span>
+                )}
               </div>
               <div>
                 <label
@@ -88,10 +75,14 @@ export default function HomePage() {
                 <input
                   type="text"
                   id="country"
-                  name="country"
-                  required
+                  {...register("coountry")}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
+                {errors.coountry && (
+                  <span className="text-xs text-red-800">
+                    {errors.coountry?.message}
+                  </span>
+                )}
               </div>
               <div>
                 <label
@@ -103,11 +94,15 @@ export default function HomePage() {
                 <input
                   type="file"
                   id="avatar"
-                  name="avatar"
+                  {...register("avatar")}
                   accept="image/*"
-                  required
                   className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
                 />
+                {errors.avatar && (
+                  <span className="text-xs text-red-800">
+                    {String(errors.avatar?.message)}
+                  </span>
+                )}
               </div>
               <button
                 type="submit"
@@ -144,7 +139,9 @@ export default function HomePage() {
                     onClick={() => setSelectedPerson(person)}
                   >
                     <Image
-                      src={person.avatar}
+                      src={
+                        "https://images.pexels.com/photos/9072375/pexels-photo-9072375.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                      }
                       alt={person.name}
                       width={40}
                       height={40}
@@ -203,6 +200,7 @@ export default function HomePage() {
           </div>
         </div>
       )}
+      <p>{output}</p>
     </div>
   );
 }

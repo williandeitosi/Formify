@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRegisterForm } from "../../../hooks/useRegisterForm";
 // TODO: criar o back-end do register para validar email e senha e gerar um token jwt
 export default function RegisterPage() {
-  const { errors, handleSubmit, register, registerUser, output } =
+  const { errors, handleSubmit, register, registerUser, errorMessage } =
     useRegisterForm();
 
   return (
@@ -13,8 +13,9 @@ export default function RegisterPage() {
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Crie sua conta
         </h2>
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
       </div>
-
+      {/* TODO: melhorar a mensagem de erro e a exibiçao dos erro */}
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form
@@ -102,7 +103,6 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
-      <p>{output}</p>
     </div>
   );
 }

@@ -2,9 +2,8 @@
 
 import { useLoginForm } from "@/hooks/useLoginForm";
 import Link from "next/link";
-// TODO: criar o back-end do login para validar email e senha e gerar um token jwt
 export default function LoginPage() {
-  const { errors, handleSubmit, loginUser, output, register } = useLoginForm();
+  const { errors, handleSubmit, register } = useLoginForm();
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 text-black">
@@ -17,7 +16,7 @@ export default function LoginPage() {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form
-            onSubmit={handleSubmit(loginUser)}
+            onSubmit={handleSubmit}
             className="space-y-6"
             action="#"
             method="POST"
@@ -101,7 +100,6 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-      <p>{output}</p>
     </div>
   );
 }

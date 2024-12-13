@@ -5,6 +5,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -19,6 +20,7 @@ interface RegisterResponse {
 }
 
 export function useRegisterForm() {
+  const router = useRouter();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const {
@@ -40,14 +42,8 @@ export function useRegisterForm() {
       );
       return response.data;
     },
-    //TODO: tentar usar as variaveis de ambiente no local da url
-    onSuccess: (data: RegisterResponse) => {
-      console.log(`Register is successful!`);
-      if (data.result.access_token) {
-        localStorage.setItem("access_token", data.result.access_token);
-      } else {
-        console.log("NAO ENCONTREI O TOKEN");
-      }
+    onSuccess: () => {
+      router.push("/login");
     },
     onError: (error: any) => {
       console.error(

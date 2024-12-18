@@ -1,27 +1,15 @@
+import { RegisterUser } from "@/app/service/authService";
 import {
   type registerUserFormData,
   registerUserFormScheme,
 } from "@/types/registerForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-
-interface RegisterResponse {
-  message: string;
-  result: {
-    access_token: string;
-    id: string;
-    email: string;
-    createAt: string;
-  };
-}
 
 export function useRegisterForm() {
   const router = useRouter();
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const {
     register,
@@ -32,16 +20,8 @@ export function useRegisterForm() {
     resolver: zodResolver(registerUserFormScheme),
   });
 
-  const mutation = useMutation<RegisterResponse, any, registerUserFormData>({
-    mutationFn: async (
-      data: registerUserFormData
-    ): Promise<RegisterResponse> => {
-      const response = await axios.post<RegisterResponse>(
-        `http://127.0.0.1:3000/api/register`,
-        data
-      );
-      return response.data;
-    },
+  const mutation = useMutation({
+    mutationFn: RegisterUser,
     onSuccess: () => {
       router.push("/login");
     },
@@ -50,8 +30,6 @@ export function useRegisterForm() {
         "Erro ao registrar:",
         error.response?.data.message || error.message
       );
-
-      setErrorMessage(error.response?.data.message);
     },
   });
 
@@ -65,6 +43,5 @@ export function useRegisterForm() {
     handleSubmit,
     errors,
     registerUser,
-    errorMessage,
   };
 }

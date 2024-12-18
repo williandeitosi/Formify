@@ -27,6 +27,14 @@ export default function RegisterForm() {
         autoComplete="password"
         error={errors.password?.message}
       />
+      <Input
+        label="Confirme sua Senha"
+        {...register("confirmPassword")}
+        id="confirmPassword"
+        type="password"
+        autoComplete="password"
+        error={errors.confirmPassword?.message}
+      />
       <div>
         <Button type="submit">Registrar</Button>
       </div>

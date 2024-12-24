@@ -1,12 +1,12 @@
-import { loginUser } from "@/app/service/authService";
 import { type loginUserFormData, loginUserFormScheme } from "@/types/loginForm";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useAuth } from "./useAuth";
 
 export function useLoginForm() {
-  const router = useRouter();
+  const { authenticate } = useAuth();
+  const [error, setError] = useState<string | null>(null);
 
   const {
     register,
@@ -16,25 +16,19 @@ export function useLoginForm() {
     resolver: zodResolver(loginUserFormScheme),
   });
 
-  const mutation = useMutation({
-    mutationFn: loginUser,
-    onSuccess: ({ result: { access_token } }) => {
-      if (access_token) {
-        localStorage.setItem("access_token", access_token);
-        router.push("/");
-      }
-    },
-    onError: (error: any) => {
-      console.error(
-        "Erro ao fazer login:",
-        error.response?.data?.message || error.message
-      );
-    },
-  });
+  const onSubmit = async (data: loginUserFormData) => {
+    try {
+      setError(null);
+      await authenticate(data.email, data.password);
+    } catch (e: any) {
+      setError("Erro ao fazer login. Verifique suas credenciais.");
+    }
+  };
 
   return {
     register,
-    handleSubmit: handleSubmit((data) => mutation.mutate(data)),
+    handleSubmit: handleSubmit(onSubmit),
     errors,
+    error,
   };
 }

@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 interface Person {
   id: number;
@@ -29,13 +29,7 @@ const formSchema = z.object({
 type FormInputs = z.infer<typeof formSchema>;
 
 export const useHomePageForm = () => {
-  const [output, setOutput] = useState("");
   const [people, setPeople] = useState<Person[]>([]);
-  const [items] = useState<Item[]>([
-    { id: 1, name: "Produto 1", price: 10.99 },
-    { id: 2, name: "Produto 2", price: 20.99 },
-    { id: 3, name: "Produto 3", price: 30.99 },
-  ]);
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
 
   const {
@@ -55,20 +49,17 @@ export const useHomePageForm = () => {
       country: data.coountry,
       avatar: data.avatar,
     };
-    setOutput(JSON.stringify(newPerson, null, 2));
     setPeople([...people, newPerson]);
     reset();
   };
 
   return {
     onSubmit,
-    items,
     people,
     selectedPerson,
     setSelectedPerson,
     register,
     handleSubmit,
     errors,
-    output, //TODO: remover depois que tudo funcionar
   };
 };

@@ -1,14 +1,28 @@
 "use client";
 
+import { useAuth } from "@/hooks/useAuth";
 import { useHomePageForm } from "@/hooks/useHomePageForm";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import DashboardForm from "../components/forms/DashboardForm";
 // TODO: fazer o back-end para pegar a imgaem e transfromar em base64 para salvar no banco de dados
 // depois fazer o GET para lista todas as pessoas
 // quando clicar na pessoa vai abrir um modal onde vai fazer um GET para listar todos os itens que a pessoa tem
 export default function HomePage() {
-  const { items, people, selectedPerson, setSelectedPerson, output } =
-    useHomePageForm();
+  const { people, selectedPerson, setSelectedPerson } = useHomePageForm();
+  const { token } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!token) {
+      router.push("/login");
+    }
+  }, [token, router]);
+
+  if (!token) {
+    return <div>Verificando autenticação...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
@@ -28,6 +42,7 @@ export default function HomePage() {
                     className="flex items-center space-x-4 bg-gray-100 p-2 rounded cursor-pointer"
                     onClick={() => setSelectedPerson(person)}
                   >
+                    {/* [ ]: mudar para aceitar imagem base64 ou colocar em algum storage */}
                     <Image
                       src={
                         "https://images.pexels.com/photos/9072375/pexels-photo-9072375.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
@@ -90,7 +105,6 @@ export default function HomePage() {
           </div>
         </div>
       )}
-      <p>{output}</p>
     </div>
   );
 }

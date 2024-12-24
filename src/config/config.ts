@@ -4,8 +4,8 @@ const configSchema = z.object({
   BASE_URL: z.coerce.string(),
 });
 
-const config = configSchema.parse({
+const apiConfig = configSchema.parse({
   BASE_URL: process.env.BASE_URL,
 });
 
-export default config;
+export default apiConfig;

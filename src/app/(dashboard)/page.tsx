@@ -11,21 +11,21 @@ import DashboardForm from "../components/forms/DashboardForm";
 // quando clicar na pessoa vai abrir um modal onde vai fazer um GET para listar todos os itens que a pessoa tem
 export default function HomePage() {
   const { people, selectedPerson, setSelectedPerson } = useHomePageForm();
-  const { token } = useAuth();
+  const { token, loading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!token) {
+    if (!loading && !token) {
       router.push("/login");
     }
-  }, [token]);
+  }, [loading, token]);
+
+  if (loading) {
+    return <Spinner color="warning" label="Loading..." />;
+  }
 
   if (!token) {
-    return (
-      <div>
-        <Spinner size="lg" color="danger" />
-      </div>
-    );
+    return null;
   }
 
   return (

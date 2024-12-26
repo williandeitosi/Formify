@@ -14,14 +14,15 @@ export const AuthContext = createContext<IContext>({} as IContext);
 
 export const AuthProvider = ({ children }: IAuthProvider) => {
   const [user, setUser] = useState<IUser | null>(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     const user = getUserLocalStorage();
-
     if (user) {
       setUser(user);
     }
+    setLoading(false);
   }, []);
 
   async function authenticate(email: string, password: string) {
@@ -58,7 +59,7 @@ export const AuthProvider = ({ children }: IAuthProvider) => {
 
   return (
     <AuthContext.Provider
-      value={{ ...user, authenticate, logout, userRegister }}
+      value={{ ...user, authenticate, logout, userRegister, loading }}
     >
       {children}
     </AuthContext.Provider>

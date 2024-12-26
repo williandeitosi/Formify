@@ -7,7 +7,6 @@ import { useAuth } from "./useAuth";
 export function useLoginForm() {
   const { authenticate } = useAuth();
   const [error, setError] = useState<string | null>(null);
-
   const {
     register,
     handleSubmit,

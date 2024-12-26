@@ -8,14 +8,13 @@ export function setUserLocalStorage(user: IUser | null) {
 
 export function getUserLocalStorage() {
   const token = localStorage.getItem("token");
+  const email = localStorage.getItem("user");
 
-  if (!token) {
+  if (!token || !email) {
     return null;
   }
 
-  const user = JSON.parse(token);
-
-  return user ?? null;
+  return { token, email };
 }
 
 export async function LoginRequest(

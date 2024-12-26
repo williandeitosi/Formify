@@ -1,11 +1,10 @@
 import { z } from "zod";
 
 const configSchema = z.object({
-  BASE_URL: z.coerce.string(),
+  NEXT_PUBLIC_BASE_URL: z.coerce.string(),
 });
 
 const apiConfig = configSchema.parse({
-  BASE_URL: process.env.BASE_URL,
+  NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
 });
-
 export default apiConfig;

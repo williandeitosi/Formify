@@ -2,5 +2,5 @@ import apiConfig from "@/config/config";
 import axios from "axios";
 
 export const Api = axios.create({
-  baseURL: apiConfig.BASE_URL,
+  baseURL: apiConfig.NEXT_PUBLIC_BASE_URL,
 });

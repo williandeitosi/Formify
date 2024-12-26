@@ -1,4 +1,3 @@
-import { RegisterUser } from "@/app/service/authService";
 import {
   type registerUserFormData,
   registerUserFormScheme,
@@ -7,9 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useAuth } from "./useAuth";
 
 export function useRegisterForm() {
   const router = useRouter();
+  const { userRegister } = useAuth();
 
   const {
     register,
@@ -21,10 +22,8 @@ export function useRegisterForm() {
   });
 
   const mutation = useMutation({
-    mutationFn: RegisterUser,
-    onSuccess: () => {
-      router.push("/login");
-    },
+    mutationFn: userRegister,
+
     onError: (error: any) => {
       console.error(
         "Erro ao registrar:",
@@ -34,8 +33,7 @@ export function useRegisterForm() {
   });
 
   const registerUser = async (data: registerUserFormData) => {
-    mutation.mutate(data);
-    reset();
+    mutation.mutate(data, { onSuccess: () => reset() });
   };
 
   return {

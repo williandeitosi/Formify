@@ -1,7 +1,7 @@
 "use client";
-
 import { useAuth } from "@/hooks/useAuth";
 import { useHomePageForm } from "@/hooks/useHomePageForm";
+import { Spinner } from "@nextui-org/spinner";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -18,10 +18,14 @@ export default function HomePage() {
     if (!token) {
       router.push("/login");
     }
-  }, [token, router]);
+  }, [token]);
 
   if (!token) {
-    return <div>Verificando autenticação...</div>;
+    return (
+      <div>
+        <Spinner size="lg" color="danger" />
+      </div>
+    );
   }
 
   return (

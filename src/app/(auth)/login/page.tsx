@@ -1,8 +1,18 @@
 "use client";
 
 import LoginForm from "@/app/components/forms/LoginForm";
+import { useAuth } from "@/hooks/useAuth";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 export default function LoginPage() {
+  const { token, loading } = useAuth();
+  const router = useRouter();
+  useEffect(() => {
+    if (token) {
+      router.push("/");
+    }
+  }, [token]);
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 text-black">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">

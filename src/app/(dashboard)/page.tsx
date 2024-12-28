@@ -1,6 +1,6 @@
 "use client";
+import { usePeople } from "@/context/People/PeopleContext";
 import { useAuth } from "@/hooks/useAuth";
-import { useHomePageForm } from "@/hooks/useHomePageForm";
 import { Spinner } from "@nextui-org/spinner";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -10,7 +10,7 @@ import DashboardForm from "../components/forms/DashboardForm";
 // depois fazer o GET para lista todas as pessoas
 // quando clicar na pessoa vai abrir um modal onde vai fazer um GET para listar todos os itens que a pessoa tem
 export default function HomePage() {
-  const { people, selectedPerson, setSelectedPerson } = useHomePageForm();
+  const { people, selectedPerson, setSelectedPerson } = usePeople();
   const { token, loading } = useAuth();
   const router = useRouter();
 
@@ -36,7 +36,6 @@ export default function HomePage() {
           <div className="max-w-md mx-auto">
             <h1 className="text-2xl font-semibold mb-6">Perfil do Usuário</h1>
             <DashboardForm />
-            {/* [ ]: preciso criar um botao de adicionar item para uma pessoa , este item tem apenas nome e preço */}
             <div className="mt-8">
               <h2 className="text-xl font-semibold mb-4">Lista de Pessoas</h2>
               <ul className="space-y-2">
@@ -79,11 +78,13 @@ export default function HomePage() {
           >
             <div className="mt-3 text-center">
               <Image
-                src={selectedPerson.avatar}
+                src={
+                  "https://images.pexels.com/photos/9072375/pexels-photo-9072375.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                }
                 alt={selectedPerson.name}
-                width={80}
-                height={80}
-                className="mx-auto rounded-full"
+                width={60}
+                height={60}
+                className="mx-auto rounded-full w-full"
               />
               <h3 className="text-lg leading-6 font-medium text-gray-900">
                 {selectedPerson.name}
@@ -95,6 +96,17 @@ export default function HomePage() {
                 <p className="text-sm text-gray-500">
                   País: {selectedPerson.country}
                 </p>
+              </div>
+              <div className="mt-2 px-7 py-3">
+                {selectedPerson.items &&
+                  selectedPerson.items.map((item) => (
+                    <p
+                      key={`id-${item.name}`}
+                      className="text-sm text-gray-500"
+                    >
+                      itens: {item.name} - {item.price}
+                    </p>
+                  ))}
               </div>
               <div className="items-center px-4 py-3">
                 <button

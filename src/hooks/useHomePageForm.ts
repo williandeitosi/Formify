@@ -1,18 +1,18 @@
+import { usePeople } from "@/context/People/PeopleContext";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 
-interface Person {
+export interface Person {
   id: number;
   name: string;
   cpf: string;
   country: string;
   avatar: string;
+  items: Item[];
 }
 
-interface Item {
-  id: number;
+export interface Item {
   name: string;
   price: number;
 }
@@ -20,46 +20,61 @@ interface Item {
 const formSchema = z.object({
   name: z.string().min(2, "O nome deve ter pelo menos 2 caracteres."),
   cpf: z.string().min(11, "O CPF deve ter 11 dígitos numéricos.").max(11),
-  coountry: z.string().min(3, "O país deve ter pelo menos 3 caracteres."),
+  country: z.string().min(3, "O país deve ter pelo menos 3 caracteres."),
   avatar: z
     .any()
     .refine((file: FileList) => file?.length > 0, "O avatar é obrigatório."),
+  items: z.array(
+    z.object({
+      name: z
+        .string()
+        .min(2, "O nome do item deve ter pelo menos 2 caracteres."),
+      price: z.coerce.number().positive("O preço deve ser maior que zero."),
+    })
+  ),
 });
 
 type FormInputs = z.infer<typeof formSchema>;
 
 export const useHomePageForm = () => {
-  const [people, setPeople] = useState<Person[]>([]);
-  const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
+  const { addPerson } = usePeople();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    control,
   } = useForm<FormInputs>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      items: [],
+    },
   });
+
+  const { fields, append, remove } = useFieldArray({ control, name: "items" });
 
   const onSubmit = (data: FormInputs) => {
     const newPerson: Person = {
-      id: people.length + 1,
+      id: Date.now(),
       name: data.name,
       cpf: data.cpf,
-      country: data.coountry,
+      country: data.country,
       avatar: data.avatar,
+      items: data.items,
     };
-    setPeople([...people, newPerson]);
+    addPerson(newPerson);
     reset();
   };
 
   return {
     onSubmit,
-    people,
-    selectedPerson,
-    setSelectedPerson,
+
     register,
     handleSubmit,
     errors,
+    fields,
+    append,
+    remove,
   };
 };

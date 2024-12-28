@@ -1,4 +1,5 @@
 import { AuthProvider } from "@/context/auth/AuthContext";
+import { PeopleProvider } from "@/context/People/PeopleContext";
 import ReactQueryProvider from "@/utils/providers/ReactQueryProvider";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
@@ -31,7 +32,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ReactQueryProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <PeopleProvider>{children}</PeopleProvider>
+          </AuthProvider>
         </ReactQueryProvider>
       </body>
     </html>

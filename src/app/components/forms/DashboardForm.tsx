@@ -1,11 +1,13 @@
 import { useHomePageForm } from "@/hooks/useHomePageForm";
+import { FaTrash } from "react-icons/fa";
 import Button from "../ui/Button";
 import Input from "../ui/Input";
 
 export default function DashboardForm() {
-  const { onSubmit, register, handleSubmit, errors } = useHomePageForm();
+  const { onSubmit, register, handleSubmit, errors, fields, append, remove } =
+    useHomePageForm();
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 flex flex-col">
       <Input
         label="Nome"
         type="text"
@@ -26,8 +28,8 @@ export default function DashboardForm() {
         label="País"
         type="text"
         id="country"
-        {...register("coountry")}
-        error={errors.coountry?.message}
+        {...register("country")}
+        error={errors.country?.message}
       />
 
       <div>
@@ -50,6 +52,39 @@ export default function DashboardForm() {
           </span>
         )}
       </div>
+      {fields.map((item, index) => (
+        <div
+          key={item.id}
+          className="flex items-center justify-center space-x-4"
+        >
+          <Input
+            label="Nome do item"
+            type="text"
+            {...register(`items.${index}.name`)}
+            error={errors.items?.[index]?.name?.message}
+          />
+          <Input
+            label="Preço"
+            type="number"
+            {...register(`items.${index}.price`)}
+            error={errors.items?.[index]?.price?.message}
+          />
+          <button
+            type="button"
+            onClick={() => remove(index)}
+            className="text-red-500 underline mt-6"
+          >
+            <FaTrash />
+          </button>
+        </div>
+      ))}
+      <button
+        type="button"
+        onClick={() => append({ name: "", price: 0 })}
+        className="self-end text-blue-800 underline"
+      >
+        Adicionar item +
+      </button>
       <Button type="submit">Salvar Perfil</Button>
     </form>
   );

@@ -30,10 +30,9 @@ model Profile {
 }
 
 model Item {
-  id      Int    @id @default(autoincrement())
-  name    String
-  price   Float
-  ownerId Int
+  id    Int    @id @default(autoincrement())
+  name  String
+  price Float
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
